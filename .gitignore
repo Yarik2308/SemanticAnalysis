@@ -1,5 +1,6 @@
 *.xml
 /out
+target/
 
 ### IntelliJ IDEA ###
 *.idea

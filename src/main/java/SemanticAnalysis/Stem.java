@@ -1,17 +1,30 @@
 package SemanticAnalysis;
-public class Stem {
-    public static String Stem(String text) {
-        if (text != null) {
-            text =  text.toLowerCase().replaceAll("[\\pP\\d]", " ");
-        } else {
-            text =  "";
-        }
 
-        // get all significant words
-        String[] words = text.split("[ \n\t\r$+<>№=]");
-        for (int i = 0; i < words.length; i++) {
-            words[i] = PorterStemmer.doStem(words[i]);
-        }
-        return text;
+import ru.stachek66.nlp.mystem.holding.Factory;
+import ru.stachek66.nlp.mystem.holding.MyStem;
+import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
+import ru.stachek66.nlp.mystem.holding.Request;
+import ru.stachek66.nlp.mystem.model.Info;
+import scala.Option;
+import scala.collection.JavaConversions;
+
+import java.io.File;
+
+public class Stem {
+
+    private final static MyStem mystemAnalyzer =
+            new Factory("-d --format json")
+                    .newMyStem("3.0", Option.<File>empty()).get();
+
+    public static Iterable<Info> Stem(String text) throws MyStemApplicationException{
+
+        final Iterable<Info> result =
+                JavaConversions.asJavaIterable(
+                        mystemAnalyzer
+                                .analyze(Request.apply(text))
+                                .info()
+                                .toIterable());
+
+        return result;
     }
 }

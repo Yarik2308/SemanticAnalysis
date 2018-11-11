@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class XMLParser {
     private static ArrayList<Comment> comments = new ArrayList<>();
 
-    public static ArrayList<Comment> XMLParser() throws ParserConfigurationException,
+    public static ArrayList<Comment> parse() throws ParserConfigurationException,
             SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
 
         XMLHandler handler = new XMLHandler();
         parser.parse(new File(
-                "../../resource/MyComments.xml"), handler);
+                "src/main/resources/MyComments.xml"), handler);
 
         int size = 0;
         for (Comment comment: comments){
