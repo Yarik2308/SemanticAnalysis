@@ -19,6 +19,11 @@ public class XMLParser {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
 
+        int[] scores = new int[11];
+        for (int i = 0; i<10; i++){
+            scores[i] = 0;
+        }
+
         XMLHandler handler = new XMLHandler();
         parser.parse(new File(
                 "src/main/resources/MyComments.xml"), handler);
@@ -27,9 +32,13 @@ public class XMLParser {
         for (Comment comment: comments){
             System.out.print(comment.getScore() + " " + comment.getText() + "\n");
             size++;
+            scores[comment.getScore()]++;
         }
-        System.out.print(size);
 
+        System.out.print("size = " + size + '\n');
+        for (int i = 0; i<11; i++){
+            System.out.print(i + " = " + scores[i] + '\n');
+        }
         return comments;
     }
 
