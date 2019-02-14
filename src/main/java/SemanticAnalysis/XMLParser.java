@@ -27,18 +27,6 @@ public class XMLParser {
         XMLHandler handler = new XMLHandler();
         parser.parse(new File(
                 "src/main/resources/MyComments.xml"), handler);
-
-        int size = 0;
-        for (Comment comment: comments){
-            System.out.print(comment.getScore() + " " + comment.getText() + "\n");
-            size++;
-            scores[comment.getScore()]++;
-        }
-
-        System.out.print("size = " + size + '\n');
-        for (int i = 0; i<11; i++){
-            System.out.print(i + " = " + scores[i] + '\n');
-        }
         return comments;
     }
 
