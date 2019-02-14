@@ -1,4 +1,5 @@
 MyComments.xml
+*.csv
 /out
 target/
 
