@@ -24,6 +24,8 @@ public class FilmsWeb {
         return comments;
     }
 
+    public void setId(int Id){ this.id = Id; }
+
     public Integer getId() {
         return id;
     }

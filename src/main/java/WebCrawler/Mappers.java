@@ -14,10 +14,21 @@ public class Mappers {
     private static Connection connection = null;
 
     public static void main(String args[]) throws SQLException {
-        FilmsWeb film = new FilmsWeb("test_name", "test_description", 7, 8,
-                "test_link");
+        FilmsWeb film = new FilmsWeb("test_film_name", "test_film_description",
+                7, 8, "test_link");
         Mappers map = new Mappers();
-        map.addFilm(film);
+        int filmId = map.addFilm(film);
+        if(filmId == film.getId()){
+            System.out.println("Film have its id");
+        }
+
+        CommentsWeb comment = new CommentsWeb(filmId, "test_comment_text", 7);
+        comment.setScoreMLT(3);
+        int commentId = map.addComent(comment);
+        if(commentId == comment.getId()){
+            System.out.println("Comment have Id");
+        }
+        System.out.println("Comment ID: " + commentId);
     }
 
     Mappers() throws SQLException{
@@ -59,23 +70,38 @@ public class Mappers {
 
     }
 
-    public boolean addComent(CommentsWeb comment){
+    public int addComent(CommentsWeb comment){
         try {
             PreparedStatement st = connection.prepareStatement("INSERT INTO comments(film_id, text, score, " +
-                    "score_mlt) VALUES (?, ?, ?, ?)");
+                    "score_mlt) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             st.setInt(1, comment.getFilmId());
             st.setString(2, comment.getText());
             st.setInt(3, comment.getScore());
             st.setDouble(4, comment.getScoreMLT());
-            st.executeUpdate();
+
+            int affectedRows = st.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating comment failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    comment.setId(generatedKeys.getInt(1));
+                    System.out.println("Film id: " + comment.getId());
+                }
+                else {
+                    throw new SQLException("Creating comment failed, no ID obtained.");
+                }
+            }
             st.close();
+
         } catch (SQLException e) {
             System.out.println("Connection Failed");
             e.printStackTrace();
-            return false;
+            return 0;
         }
-        return true;
+        return comment.getId();
     }
 
 //    public List<CommentsWeb> getComments(int filmId){
@@ -85,23 +111,39 @@ public class Mappers {
 
 
 
-    public boolean addFilm(FilmsWeb film){
+    public int addFilm(FilmsWeb film){
         try{
             PreparedStatement st = connection.prepareStatement("INSERT INTO films(name, description, " +
-                    "viewers_score, critics_score, img_link) VALUES  (?, ?, ?, ?, ?)");
+                    "viewers_score, critics_score, img_link) VALUES  (?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
             st.setString(1, film.getName());
             st.setString(2, film.getDescription());
             st.setDouble(3, film.getViewersScore());
             st.setDouble(4, film.getCriticsScore());
             st.setString(5, film.getImgLink());
-            st.execute();
+
+            int affectedRows = st.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating film failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = st.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    film.setId(generatedKeys.getInt(1));
+                    System.out.println("Film id: " + film.getId());
+                }
+                else {
+                    throw new SQLException("Creating film failed, no ID obtained.");
+                }
+            }
+
             st.close();
         } catch (SQLException e){
             System.out.println("Connection Failed");
             e.printStackTrace();
-            return false;
+            return 0;
         }
-        return true;
+        return film.getId();
     }
 
 
