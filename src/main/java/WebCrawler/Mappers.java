@@ -25,7 +25,8 @@ public class Mappers {
             System.out.println("Film have its id");
         }
 
-        CommentsWeb comment = new CommentsWeb(filmId, "test_comment_text", 7);
+        CommentsWeb comment = new CommentsWeb(filmId, "test_author",
+                "test_comment_text", 7);
         comment.setScoreMLT(3);
         int commentId = map.addComment(comment);
         if(commentId == comment.getId()){
@@ -58,12 +59,12 @@ public class Mappers {
             Statement statement = connection.createStatement();
             // Create films table
             statement.execute("CREATE TABLE IF NOT EXISTS films(film_id SERIAL NOT NULL PRIMARY KEY," +
-                    "name varchar(50) NOT NULL, description varchar(2048), viewers_score NUMERIC," +
+                    "name varchar(50) NOT NULL, description varchar(4096), viewers_score NUMERIC," +
                     "critics_score NUMERIC, img_link varchar(124));");
             // // Create comments table
             statement.execute("CREATE TABLE IF NOT EXISTS comments(comment_id SERIAL NOT NULL PRIMARY KEY," +
-                    "film_id SERIAL REFERENCES films(film_id), text varchar(2048) NOT NULL, score NUMERIC NOT NULL, " +
-                    "score_mlt NUMERIC);");
+                    "film_id SERIAL REFERENCES films(film_id), author varchar(32), text varchar(2048) NOT NULL, " +
+                    "score NUMERIC NOT NULL, score_mlt NUMERIC);");
 
         } catch (SQLException e) {
             System.out.println("Connection Failed");
@@ -81,13 +82,14 @@ public class Mappers {
 
     public int addComment(CommentsWeb comment){
         try {
-            PreparedStatement st = connection.prepareStatement("INSERT INTO comments(film_id, text, score, " +
-                    "score_mlt) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement st = connection.prepareStatement("INSERT INTO comments(film_id, author, " +
+                    "text, score, score_mlt) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             st.setInt(1, comment.getFilmId());
-            st.setString(2, comment.getText());
-            st.setInt(3, comment.getScore());
-            st.setDouble(4, comment.getScoreMLT());
+            st.setString(2, comment.getAuthor());
+            st.setString(3, comment.getText());
+            st.setInt(4, comment.getScore());
+            st.setDouble(5, comment.getScoreMLT());
 
             int affectedRows = st.executeUpdate();
             if (affectedRows == 0) {
@@ -126,7 +128,8 @@ public class Mappers {
             // loop through the result set
             while (rs.next()) {
                 CommentsWeb comment = new CommentsWeb(rs.getInt("film_id"),
-                        rs.getString("text"), rs.getInt("score"));
+                        rs.getString("author"), rs.getString("text"),
+                        rs.getInt("score"));
                 comment.setId(rs.getInt("comment_id"));
                 comment.setScoreMLT(rs.getInt("score_mlt"));
                 comments.add(comment);

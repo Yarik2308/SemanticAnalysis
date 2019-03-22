@@ -2,10 +2,11 @@ package WebCrawler;
 
 public class CommentsWeb {
     private Integer id, filmId, score, scoreMLT;
-    private String text;
+    private String text, author;
 
-    CommentsWeb(int film_id, String text, int score){
+    CommentsWeb(int film_id, String author, String text, int score){
         this.filmId = film_id;
+        this.author = author;
         this.text = text;
         this.score = score;
     }
@@ -13,6 +14,8 @@ public class CommentsWeb {
     public void setScoreMLT(Integer scoreMLT) {
         this.scoreMLT = scoreMLT;
     }
+
+    public String getAuthor(){ return author; }
 
     public String getText() {
         return text;
