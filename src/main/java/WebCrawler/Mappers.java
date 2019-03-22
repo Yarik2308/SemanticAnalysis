@@ -1,9 +1,12 @@
 package WebCrawler;
 
+import SemanticAnalysis.Comment;
 import sun.plugin2.main.client.DisconnectedExecutionContext;
+import weka.classifiers.evaluation.output.prediction.Null;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Mappers {
@@ -24,11 +27,17 @@ public class Mappers {
 
         CommentsWeb comment = new CommentsWeb(filmId, "test_comment_text", 7);
         comment.setScoreMLT(3);
-        int commentId = map.addComent(comment);
+        int commentId = map.addComment(comment);
         if(commentId == comment.getId()){
             System.out.println("Comment have Id");
         }
         System.out.println("Comment ID: " + commentId);
+
+        List<CommentsWeb> comments = new ArrayList<>();
+        comments = map.getComments(filmId);
+        for(CommentsWeb c: comments){
+            System.out.println("Comment: " + c.getId() + " " + c.getFilmId() + " " + c.getText());
+        }
     }
 
     Mappers() throws SQLException{
@@ -54,7 +63,7 @@ public class Mappers {
             // // Create comments table
             statement.execute("CREATE TABLE IF NOT EXISTS comments(comment_id SERIAL NOT NULL PRIMARY KEY," +
                     "film_id SERIAL REFERENCES films(film_id), text varchar(2048) NOT NULL, score NUMERIC NOT NULL, " +
-                    "score_mlt varchar(10));");
+                    "score_mlt NUMERIC);");
 
         } catch (SQLException e) {
             System.out.println("Connection Failed");
@@ -70,7 +79,7 @@ public class Mappers {
 
     }
 
-    public int addComent(CommentsWeb comment){
+    public int addComment(CommentsWeb comment){
         try {
             PreparedStatement st = connection.prepareStatement("INSERT INTO comments(film_id, text, score, " +
                     "score_mlt) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -104,10 +113,31 @@ public class Mappers {
         return comment.getId();
     }
 
-//    public List<CommentsWeb> getComments(int filmId){
-//        Statement st = connection.createStatement();
-//        st.execute("");
-//    }
+    public List<CommentsWeb> getComments(int filmId){
+        List<CommentsWeb> comments = new ArrayList<>();
+        try {
+            PreparedStatement st = connection.prepareStatement(
+                    "SELECT * FROM comments WHERE film_id = ?");
+
+            // set the value
+            st.setInt(1, filmId);
+            ResultSet rs = st.executeQuery();
+
+            // loop through the result set
+            while (rs.next()) {
+                CommentsWeb comment = new CommentsWeb(rs.getInt("film_id"),
+                        rs.getString("text"), rs.getInt("score"));
+                comment.setId(rs.getInt("comment_id"));
+                comment.setScoreMLT(rs.getInt("score_mlt"));
+                comments.add(comment);
+            }
+
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return comments;
+    }
 
 
 
@@ -147,8 +177,30 @@ public class Mappers {
     }
 
 
-//    public FilmsWeb getFilm(int filmId){
-//        Statement st = connection.createStatement();
-//        st.execute("");
-//    }
+    public FilmsWeb getFilm(int filmId){
+        FilmsWeb film = new FilmsWeb();
+        try {
+            PreparedStatement st = connection.prepareStatement(
+                    "SELECT * FROM films WHERE film_id = ?");
+
+            // set the value
+            st.setInt(1, filmId);
+            ResultSet rs = st.executeQuery();
+
+            // loop through the result set
+            while (rs.next()) {
+                film = new FilmsWeb(rs.getString("name"),
+                        rs.getString("description"), rs.getInt("viewers_score"),
+                        rs.getInt("critics_score"), rs.getString("img_link"));
+
+                film.setId(rs.getInt("film_id"));
+                return film;
+            }
+
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return film;
+    }
 }

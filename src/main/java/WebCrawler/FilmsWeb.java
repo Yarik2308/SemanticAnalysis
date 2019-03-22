@@ -8,6 +8,8 @@ public class FilmsWeb {
     double viewersScore, criticsScore;
     List<CommentsWeb> comments;
 
+    FilmsWeb(){ this.id = 0; }
+
     FilmsWeb(String name, String description, double viewersScore, double criticsScore, String imgLink){
         this.name = name;
         this.description = description;
