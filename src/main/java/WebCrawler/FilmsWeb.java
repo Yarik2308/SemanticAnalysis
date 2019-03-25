@@ -1,5 +1,6 @@
 package WebCrawler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilmsWeb {
@@ -7,6 +8,7 @@ public class FilmsWeb {
     String name, description, imgLink;
     double viewersScore, criticsScore;
     List<CommentsWeb> comments;
+    List<String> genres;
 
     FilmsWeb(){ this.id = 0; }
 
@@ -16,14 +18,8 @@ public class FilmsWeb {
         this.viewersScore = viewersScore;
         this.criticsScore = criticsScore;
         this.imgLink = imgLink;
-    }
-
-    public void setComments(List<CommentsWeb> comments) {
-        this.comments = comments;
-    }
-
-    public List<CommentsWeb> getComments() {
-        return comments;
+        this.comments = new ArrayList<>();
+        this.genres = new ArrayList<>();
     }
 
     public void setId(int Id){ this.id = Id; }
@@ -51,4 +47,20 @@ public class FilmsWeb {
     public String getImgLink() {
         return imgLink;
     }
+
+    public void setComments(List<CommentsWeb> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(CommentsWeb comment){
+        this.comments.add(comment);
+    }
+
+    public List<CommentsWeb> getComments() {
+        return comments;
+    }
+
+    public void setGenres(List<String> genres) { this.genres = genres; }
+
+    public List<String> getGenres(){ return genres; }
 }

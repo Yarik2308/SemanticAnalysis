@@ -1,10 +1,5 @@
 package WebCrawler;
 
-import SemanticAnalysis.Comment;
-import sun.plugin2.main.client.DisconnectedExecutionContext;
-import weka.classifiers.evaluation.output.prediction.Null;
-
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,29 +14,37 @@ public class Mappers {
     public static void main(String args[]) throws SQLException {
         FilmsWeb film = new FilmsWeb("test_film_name", "test_film_description",
                 7, 8, "test_link");
+        List<String> genres = new ArrayList<>();
+        genres.add("test_genres_1");
+        genres.add("test_genres_2");
+        film.setGenres(genres);
+
         Mappers map = new Mappers();
-        int filmId = map.addFilm(film);
-        if(filmId == film.getId()){
-            System.out.println("Film have its id");
-        }
+        map.addFilm(film);
 
-        CommentsWeb comment = new CommentsWeb(filmId, "test_author",
-                "test_comment_text", 7);
-        comment.setScoreMLT(3);
-        int commentId = map.addComment(comment);
-        if(commentId == comment.getId()){
-            System.out.println("Comment have Id");
-        }
-        System.out.println("Comment ID: " + commentId);
+        CommentsWeb comment1 = new CommentsWeb(film.getId(), "test_author_1",
+                "test_comment_text_1", 7);
+        comment1.setScoreMLT(3);
+        map.addComment(comment1);
 
-        List<CommentsWeb> comments = new ArrayList<>();
-        comments = map.getComments(filmId);
-        for(CommentsWeb c: comments){
+        CommentsWeb comment2 = new CommentsWeb(film.getId(), "test_author_2",
+                "test_comment_text_2", 2);
+        comment2.setScoreMLT(1);
+        map.addComment(comment2);
+
+        System.out.println("Comment1 ID: " + comment1.getId());
+        System.out.println("Comment2 ID: " + comment2.getId());
+
+        FilmsWeb filmWithCommentsAndGenres = map.getFilm(film.getId());
+        for(String genre: filmWithCommentsAndGenres.getGenres()){
+            System.out.println(genre);
+        }
+        for(CommentsWeb c: filmWithCommentsAndGenres.getComments()){
             System.out.println("Comment: " + c.getId() + " " + c.getFilmId() + " " + c.getText());
         }
     }
 
-    Mappers() throws SQLException{
+    Mappers(){
         System.out.println("Testing connection to PostgreSQL JDBC");
 
         try {
@@ -61,11 +64,14 @@ public class Mappers {
             statement.execute("CREATE TABLE IF NOT EXISTS films(film_id SERIAL NOT NULL PRIMARY KEY," +
                     "name varchar(50) NOT NULL, description varchar(4096), viewers_score NUMERIC," +
                     "critics_score NUMERIC, img_link varchar(124));");
-            // // Create comments table
+            // Create comments table
             statement.execute("CREATE TABLE IF NOT EXISTS comments(comment_id SERIAL NOT NULL PRIMARY KEY," +
                     "film_id SERIAL REFERENCES films(film_id), author varchar(32), text varchar(2048) NOT NULL, " +
                     "score NUMERIC NOT NULL, score_mlt NUMERIC);");
 
+            // Create genres table
+            statement.execute("CREATE TABLE IF NOT EXISTS genres(film_id SERIAL REFERENCES films(film_id)," +
+                    "genre varchar(32));");
         } catch (SQLException e) {
             System.out.println("Connection Failed");
             e.printStackTrace();
@@ -135,6 +141,7 @@ public class Mappers {
                 comments.add(comment);
             }
 
+            st.close();
         } catch (SQLException e){
             System.out.println("Connection Failed");
             e.printStackTrace();
@@ -143,11 +150,57 @@ public class Mappers {
     }
 
 
+    public int addGenre(int film_id, String genre){
+        int key = 0;
+        try{
+            PreparedStatement st = connection.prepareStatement("INSERT INTO genres(film_id, genre)" +
+                    "VALUES (?, ?);");
+            //set the value
+            st.setInt(1, film_id);
+            st.setString(2, genre);
+
+            int affectedRows = st.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating genre failed, no rows affected.");
+            }
+
+            st.close();
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+
+        return key;
+    }
+
+    public List<String> getGenres(int filmId){
+        List<String> genres = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement("SELECT * FROM genres WHERE film_id = ?;");
+            st.setInt(1, filmId);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                genres.add(rs.getString("genre"));
+            }
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return genres;
+    }
+
 
     public int addFilm(FilmsWeb film){
+        List<String> genres = film.getGenres();
+        if(genres.isEmpty()) {
+            System.out.println("No genres in film!");
+            return 0;
+        }
+
         try{
             PreparedStatement st = connection.prepareStatement("INSERT INTO films(name, description, " +
-                    "viewers_score, critics_score, img_link) VALUES  (?, ?, ?, ?, ?)",
+                            "viewers_score, critics_score, img_link) VALUES  (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             st.setString(1, film.getName());
             st.setString(2, film.getDescription());
@@ -176,6 +229,10 @@ public class Mappers {
             e.printStackTrace();
             return 0;
         }
+
+        for(String genre: genres){
+            addGenre(film.getId(), genre);
+        }
         return film.getId();
     }
 
@@ -197,13 +254,17 @@ public class Mappers {
                         rs.getInt("critics_score"), rs.getString("img_link"));
 
                 film.setId(rs.getInt("film_id"));
-                return film;
+                //return film;
             }
 
+            st.close();
         } catch (SQLException e){
             System.out.println("Connection Failed");
             e.printStackTrace();
         }
+
+        film.setGenres(getGenres(filmId));
+        film.setComments(getComments(filmId));
         return film;
     }
 }
