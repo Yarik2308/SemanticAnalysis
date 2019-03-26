@@ -1,11 +1,12 @@
 package WebCrawler;
 
+import SemanticAnalysis.Comment;
+
 public class CommentsWeb {
     private Integer id, filmId, score, scoreMLT;
     private String text, author;
 
-    CommentsWeb(int film_id, String author, String text, int score){
-        this.filmId = film_id;
+    CommentsWeb(String author, String text, int score){
         this.author = author;
         this.text = text;
         this.score = score;
@@ -30,6 +31,8 @@ public class CommentsWeb {
     public Integer getFilmId() {
         return filmId;
     }
+
+    public void setFilmId(Integer filmId) { this.filmId = filmId; }
 
     public Integer getScore() {
         return score;

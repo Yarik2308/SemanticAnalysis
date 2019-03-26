@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import scala.Int;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,6 +74,7 @@ public class CrawlerLeg {
         return bodyText.toLowerCase().contains(searchWord.toLowerCase());
     }
 
+
     public String getName(){
         String name = new String();
         // Defensive coding. This method should only be used after a successful crawl.
@@ -80,7 +82,6 @@ public class CrawlerLeg {
             System.out.println("ERROR! Call crawl() before performing analysis on the document");
             return name;
         }
-        System.out.println("Searching for the name of film...");
 
         Elements elementsDiv = htmlDocument.select("div");
         for(Element elementDiv: elementsDiv){
@@ -93,7 +94,6 @@ public class CrawlerLeg {
                 }
             }
         }
-
         return name;
     }
 
@@ -104,7 +104,6 @@ public class CrawlerLeg {
             System.out.println("ERROR! Call crawl() before performing analysis on the document");
             return description;
         }
-        System.out.println("Searching for the description of film...");
 
         Elements elementsDiv = htmlDocument.select("div");
         for(Element elementDiv: elementsDiv){
@@ -127,7 +126,6 @@ public class CrawlerLeg {
             System.out.println("ERROR! Call crawl() before performing analysis on the document");
             return genres;
         }
-        System.out.println("Searching for the genres of film...");
 
         Elements elementsSpan = htmlDocument.select("span");
         for(Element elementSpan: elementsSpan) {
@@ -135,7 +133,6 @@ public class CrawlerLeg {
                 genres.add(elementSpan.text());
             }
         }
-        System.out.println(genres);
         return genres;
     }
 
@@ -157,7 +154,7 @@ public class CrawlerLeg {
                 }
             }
         }
-        System.out.println(imgNetUrl);
+
         try {
             //Open a URL Stream
             Connection.Response resultImageResponse = Jsoup.connect(imgNetUrl).ignoreContentType(true).execute();
@@ -172,8 +169,101 @@ public class CrawlerLeg {
             System.out.println("Failed to load IMG");
             e.printStackTrace();
         }
-
         return imgUrl;
+    }
+
+    public double getCriticsScore(){
+        double score = 0;
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return score;
+        }
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv) {
+            if (elementDiv.attr("id").equals("jr_authorbox2")) {
+                score = Double.parseDouble(elementDiv.text());
+            }
+        }
+        return score;
+    }
+
+    public double getUsersScore(){
+        double score = 0;
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return score;
+        }
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv) {
+            if (elementDiv.attr("id").equals("userbox2")) {
+                score = Double.parseDouble(elementDiv.text());
+            }
+        }
+        return score;
+    }
+
+    public List<CommentsWeb> getComments(){
+        List<CommentsWeb> comments = new ArrayList<>();
+        Integer id, filmId, score, scoreMLT;
+        String text, author;
+
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return comments;
+        }
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv) {
+            if (elementDiv.attr("class").equals("jrReviewListDetail")) {
+                // Begin reviews inner
+                Elements elementsRevList = elementDiv.select("div");
+
+                for(Element elementRevList: elementsRevList){
+                    if(elementRevList.attr("class").equals("jr-layout-inner jrReviewContainer")){
+                        // Begin review inner
+                        String authorAndScore = "";
+                        author = "";
+                        score = -1;
+                        text = "";
+                        Elements elementsRev = elementRevList.select("div");
+                        for(Element elementRev: elementsRev){
+                            if(elementRev.attr("style").equals("display:inline;")){
+                                Elements elementsB = elementRev.select("b");
+                                for(Element elementB: elementsB){
+                                    if(!elementB.text().equals("%")){
+                                        authorAndScore = authorAndScore + elementB.text() + " ";
+                                    }
+                                }
+                                //System.out.println(authorAndScore);
+                                try{
+                                    int length = authorAndScore.split(" ").length;
+                                    for(int i = 1; i<length - 1; i++){
+                                        author = author + authorAndScore.split(" ")[i] + " ";
+                                    }
+                                    score = Integer.parseInt(authorAndScore.split(" ")[length-1]);
+                                } catch (NumberFormatException e){
+                                    score = - 1;
+                                }
+                            }
+                            if(score!=-1){
+                                if(elementRev.attr("class").equals("jrReviewContent")){
+                                    text = elementRev.text();
+                                    CommentsWeb comment = new CommentsWeb(author, text, score);
+                                    comments.add(comment);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return comments;
     }
 
     public List<String> getLinks() {

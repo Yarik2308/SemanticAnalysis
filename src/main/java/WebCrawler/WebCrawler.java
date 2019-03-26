@@ -17,9 +17,13 @@ public class WebCrawler {
         CrawlerLeg leg = new CrawlerLeg();
         leg.crawl("https://www.megacritic.ru/film/kapitan-marvel");
         String name = leg.getName();
-        leg.getDescription();
-        leg.getGenres();
-        leg.getImg(name);
+        String description = leg.getDescription();
+        List<String> genres = leg.getGenres();
+        String imgUrl = leg.getImg(name);
+        Double criticsScore = leg.getCriticsScore();
+        Double usersScore = leg.getUsersScore();
+        List<CommentsWeb> comments = leg.getComments();
+
     }
 
     private String nextPage(){

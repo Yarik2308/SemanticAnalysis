@@ -3,7 +3,7 @@ MyComments.xml
 /out
 target/
 resources/
-.DS_Store
+*.DS_Store
 
 ### IntelliJ IDEA ###
 *.idea

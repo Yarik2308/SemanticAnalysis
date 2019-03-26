@@ -22,13 +22,15 @@ public class Mappers {
         Mappers map = new Mappers();
         map.addFilm(film);
 
-        CommentsWeb comment1 = new CommentsWeb(film.getId(), "test_author_1",
+        CommentsWeb comment1 = new CommentsWeb("test_author_1",
                 "test_comment_text_1", 7);
+        comment1.setFilmId(film.getId());
         comment1.setScoreMLT(3);
         map.addComment(comment1);
 
-        CommentsWeb comment2 = new CommentsWeb(film.getId(), "test_author_2",
+        CommentsWeb comment2 = new CommentsWeb( "test_author_2",
                 "test_comment_text_2", 2);
+        comment2.setFilmId(film.getId());
         comment2.setScoreMLT(1);
         map.addComment(comment2);
 
@@ -133,9 +135,10 @@ public class Mappers {
 
             // loop through the result set
             while (rs.next()) {
-                CommentsWeb comment = new CommentsWeb(rs.getInt("film_id"),
-                        rs.getString("author"), rs.getString("text"),
+                CommentsWeb comment = new CommentsWeb( rs.getString("author"),
+                        rs.getString("text"),
                         rs.getInt("score"));
+                comment.setFilmId(rs.getInt("film_id"));
                 comment.setId(rs.getInt("comment_id"));
                 comment.setScoreMLT(rs.getInt("score_mlt"));
                 comments.add(comment);
@@ -198,6 +201,12 @@ public class Mappers {
             return 0;
         }
 
+        List<CommentsWeb> comments = film.getComments();
+        if(comments.isEmpty()) {
+            System.out.println("No comments in film!");
+            return 0;
+        }
+
         try{
             PreparedStatement st = connection.prepareStatement("INSERT INTO films(name, description, " +
                             "viewers_score, critics_score, img_link) VALUES  (?, ?, ?, ?, ?)",
@@ -232,6 +241,9 @@ public class Mappers {
 
         for(String genre: genres){
             addGenre(film.getId(), genre);
+        }
+        for(CommentsWeb comment: comments){
+            addComment(comment);
         }
         return film.getId();
     }
