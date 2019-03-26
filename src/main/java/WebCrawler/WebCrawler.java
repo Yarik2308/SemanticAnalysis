@@ -12,8 +12,14 @@ public class WebCrawler {
     private List<String> pagesToVisit = new LinkedList<>();
 
     public static void main(String args[]){
-        WebCrawler crawler = new WebCrawler();
-        crawler.search("https://vk.com/yaroslav2308", "Ярослав");
+        //WebCrawler crawler = new WebCrawler();
+        //crawler.search("https://www.megacritic.ru/film/kapitan-marvel", "Капитан");
+        CrawlerLeg leg = new CrawlerLeg();
+        leg.crawl("https://www.megacritic.ru/film/kapitan-marvel");
+        String name = leg.getName();
+        leg.getDescription();
+        leg.getGenres();
+        leg.getImg(name);
     }
 
     private String nextPage(){

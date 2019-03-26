@@ -6,7 +6,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,8 +62,7 @@ public class CrawlerLeg {
      *
      * @return whether or not the word was found
      */
-    public boolean searchForWord(String searchWord)
-    {
+    public boolean searchForWord(String searchWord) {
         // Defensive coding. This method should only be used after a successful crawl.
         if(this.htmlDocument == null) {
             System.out.println("ERROR! Call crawl() before performing analysis on the document");
@@ -72,6 +73,108 @@ public class CrawlerLeg {
         return bodyText.toLowerCase().contains(searchWord.toLowerCase());
     }
 
+    public String getName(){
+        String name = new String();
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return name;
+        }
+        System.out.println("Searching for the name of film...");
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv){
+            if(elementDiv.attr("class").equals("contentheading")){
+                Elements elementsSpan = elementDiv.select("span");
+                for(Element elementSpan: elementsSpan){
+                    if(elementSpan.attr("itemprop").equals("name")){
+                        name = elementSpan.text();
+                    }
+                }
+            }
+        }
+
+        return name;
+    }
+
+    public String getDescription(){
+        String description = new String();
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return description;
+        }
+        System.out.println("Searching for the description of film...");
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv){
+            if(elementDiv.attr("itemprop").equals("description")){
+                Elements elementsP = elementDiv.select("P");
+                description = "";
+                for(Element elementP: elementsP){
+                    description = description + elementP.text();
+                }
+            }
+        }
+        System.out.println(description);
+        return description;
+    }
+
+    public List<String> getGenres(){
+        List<String> genres = new ArrayList<>();
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return genres;
+        }
+        System.out.println("Searching for the genres of film...");
+
+        Elements elementsSpan = htmlDocument.select("span");
+        for(Element elementSpan: elementsSpan) {
+            if (elementSpan.attr("itemprop").equals("genre")) {
+                genres.add(elementSpan.text());
+            }
+        }
+        System.out.println(genres);
+        return genres;
+    }
+
+    public String getImg(String imgName){
+        String imgUrl = new String();
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return imgUrl;
+        }
+
+        String imgNetUrl = "no href found";
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv){
+            if(elementDiv.attr("class").equals("jrListingMainImage jrMediaLeft")){
+                Elements elementsImg = elementDiv.select("a");
+                for(Element elementImg: elementsImg){
+                    imgNetUrl = elementImg.attr("href");
+                }
+            }
+        }
+        System.out.println(imgNetUrl);
+        try {
+            //Open a URL Stream
+            Connection.Response resultImageResponse = Jsoup.connect(imgNetUrl).ignoreContentType(true).execute();
+
+            // output here
+            FileOutputStream out = (new FileOutputStream(new java.io.File("src/main/resources/FilmsImgs/"
+                    + imgName)));
+            // resultImageResponse.body() is where the image's contents are.
+            out.write(resultImageResponse.bodyAsBytes());
+            out.close();
+        } catch (IOException e){
+            System.out.println("Failed to load IMG");
+            e.printStackTrace();
+        }
+
+        return imgUrl;
+    }
 
     public List<String> getLinks() {
         return this.links;
