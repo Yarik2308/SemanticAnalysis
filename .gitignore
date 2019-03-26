@@ -2,6 +2,7 @@ MyComments.xml
 *.csv
 /out
 target/
+resources/
 
 ### IntelliJ IDEA ###
 *.idea
