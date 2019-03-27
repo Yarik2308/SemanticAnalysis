@@ -54,24 +54,41 @@ public class CrawlerLeg {
         }
     }
 
-
-    /**
-     * Performs a search on the body of on the HTML document that is retrieved. This method should
-     * only be called after a successful crawl.
-     *
-     * @param searchWord The word or string to look for
-     *
-     * @return whether or not the word was found
-     */
-    public boolean searchForWord(String searchWord) {
+    public String getNextPageForSearch(){
+        String url = new String();
         // Defensive coding. This method should only be used after a successful crawl.
         if(this.htmlDocument == null) {
             System.out.println("ERROR! Call crawl() before performing analysis on the document");
-            return false;
+            return url;
         }
-        System.out.println("Searching for the word " + searchWord + "...");
-        String bodyText = this.htmlDocument.body().text();
-        return bodyText.toLowerCase().contains(searchWord.toLowerCase());
+
+        Elements elementsA = htmlDocument.select("a");
+        for(Element elementA: elementsA){
+            if(elementA.attr("class").equals("jr-pagenav-next jrButton jrSmall")){
+                url = elementA.attr("href");
+            }
+        }
+        return url;
+    }
+
+    public List<String> getFilmsPagesToVisit(){
+        List<String> filmsPagesToVisit = new LinkedList<>();
+        // Defensive coding. This method should only be used after a successful crawl.
+        if(this.htmlDocument == null) {
+            System.out.println("ERROR! Call crawl() before performing analysis on the document");
+            return filmsPagesToVisit;
+        }
+
+        Elements elementsDiv = htmlDocument.select("div");
+        for(Element elementDiv: elementsDiv){
+            if(elementDiv.attr("class").equals("jrContentTitle")){
+                Elements elementsA = elementDiv.select("a");
+                for(Element elementA: elementsA){
+                    filmsPagesToVisit.add(elementA.attr("href"));
+                }
+            }
+        }
+        return filmsPagesToVisit;
     }
 
 

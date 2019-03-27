@@ -225,7 +225,6 @@ public class Mappers {
             try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     film.setId(generatedKeys.getInt(1));
-                    System.out.println("Film id: " + film.getId());
                 }
                 else {
                     throw new SQLException("Creating film failed, no ID obtained.");
@@ -243,6 +242,7 @@ public class Mappers {
             addGenre(film.getId(), genre);
         }
         for(CommentsWeb comment: comments){
+            comment.setFilmId(film.getId());
             addComment(comment);
         }
         return film.getId();
