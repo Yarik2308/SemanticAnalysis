@@ -13,7 +13,8 @@ public class Mappers {
 
     public static void main(String args[]) throws SQLException {
         FilmsWeb film = new FilmsWeb("test_film_name", "test_film_description",
-                7, 8, "test_link");
+                7, 8);
+        film.setImgLink("test_img_link");
         List<String> genres = new ArrayList<>();
         genres.add("test_genres_1");
         genres.add("test_genres_2");
@@ -64,11 +65,11 @@ public class Mappers {
             Statement statement = connection.createStatement();
             // Create films table
             statement.execute("CREATE TABLE IF NOT EXISTS films(film_id SERIAL NOT NULL PRIMARY KEY," +
-                    "name varchar(50) NOT NULL, description varchar(4096), viewers_score NUMERIC," +
+                    "name varchar(100) NOT NULL, description varchar(4096), viewers_score NUMERIC," +
                     "critics_score NUMERIC, img_link varchar(124));");
             // Create comments table
             statement.execute("CREATE TABLE IF NOT EXISTS comments(comment_id SERIAL NOT NULL PRIMARY KEY," +
-                    "film_id SERIAL REFERENCES films(film_id), author varchar(32), text varchar(2048) NOT NULL, " +
+                    "film_id SERIAL REFERENCES films(film_id), author varchar(64), text varchar(8192) NOT NULL, " +
                     "score NUMERIC NOT NULL, score_mlt NUMERIC);");
 
             // Create genres table
@@ -107,7 +108,6 @@ public class Mappers {
             try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     comment.setId(generatedKeys.getInt(1));
-                    System.out.println("Film id: " + comment.getId());
                 }
                 else {
                     throw new SQLException("Creating comment failed, no ID obtained.");
@@ -225,6 +225,7 @@ public class Mappers {
             try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     film.setId(generatedKeys.getInt(1));
+                    System.out.println("Film ID: " + film.getId());
                 }
                 else {
                     throw new SQLException("Creating film failed, no ID obtained.");
@@ -263,8 +264,9 @@ public class Mappers {
             while (rs.next()) {
                 film = new FilmsWeb(rs.getString("name"),
                         rs.getString("description"), rs.getInt("viewers_score"),
-                        rs.getInt("critics_score"), rs.getString("img_link"));
+                        rs.getInt("critics_score"));
 
+                film.setImgLink(rs.getString("img_link"));
                 film.setId(rs.getInt("film_id"));
                 //return film;
             }

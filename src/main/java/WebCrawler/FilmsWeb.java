@@ -12,12 +12,11 @@ public class FilmsWeb {
 
     FilmsWeb(){ this.id = 0; }
 
-    FilmsWeb(String name, String description, double viewersScore, double criticsScore, String imgLink){
+    FilmsWeb(String name, String description, double viewersScore, double criticsScore){
         this.name = name;
         this.description = description;
         this.viewersScore = viewersScore;
         this.criticsScore = criticsScore;
-        this.imgLink = imgLink;
         this.comments = new ArrayList<>();
         this.genres = new ArrayList<>();
     }
@@ -46,6 +45,10 @@ public class FilmsWeb {
 
     public String getImgLink() {
         return imgLink;
+    }
+
+    public void setImgLink(String link){
+        this.imgLink = link;
     }
 
     public void setComments(List<CommentsWeb> comments) {

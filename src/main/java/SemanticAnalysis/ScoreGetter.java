@@ -18,7 +18,7 @@ public class ScoreGetter {
     private Classifier cls;
     private CommentStem Stemer;
 
-    ScoreGetter() throws Exception{
+    public ScoreGetter() throws Exception{
         // load classifier
         if (new File(FILE).exists()) {
             cls = (Classifier) weka.core.SerializationHelper.read(FILE);

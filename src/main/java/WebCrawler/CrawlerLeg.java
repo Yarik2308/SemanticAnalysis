@@ -17,7 +17,7 @@ public class CrawlerLeg {
     // We'll use a fake USER_AGENT so the web server thinks the robot is a normal web browser.
     private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-    private List<String> links = new LinkedList<>();
+    //private List<String> links = new LinkedList<>();
     private Document htmlDocument;
 
 
@@ -40,11 +40,6 @@ public class CrawlerLeg {
             if(!connection.response().contentType().contains("text/html")) {
                 System.out.println("**Failure** Retrieved something other than HTML");
                 return false;
-            }
-            Elements linksOnPage = htmlDocument.select("a[href]");
-            System.out.println("Found (" + linksOnPage.size() + ") links");
-            for(Element link : linksOnPage) {
-                this.links.add(link.absUrl("href"));
             }
             return true;
         }
@@ -72,6 +67,7 @@ public class CrawlerLeg {
     }
 
     public List<String> getFilmsPagesToVisit(){
+        final String MEGACRITIC_URL = "https://www.megacritic.ru";
         List<String> filmsPagesToVisit = new LinkedList<>();
         // Defensive coding. This method should only be used after a successful crawl.
         if(this.htmlDocument == null) {
@@ -84,7 +80,7 @@ public class CrawlerLeg {
             if(elementDiv.attr("class").equals("jrContentTitle")){
                 Elements elementsA = elementDiv.select("a");
                 for(Element elementA: elementsA){
-                    filmsPagesToVisit.add(elementA.attr("href"));
+                    filmsPagesToVisit.add(MEGACRITIC_URL + elementA.attr("href"));
                 }
             }
         }
@@ -132,7 +128,6 @@ public class CrawlerLeg {
                 }
             }
         }
-        System.out.println(description);
         return description;
     }
 
