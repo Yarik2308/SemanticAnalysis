@@ -1,7 +1,6 @@
 package WebCrawler;
 
-import SemanticAnalysis.Comment;
-import SemanticAnalysis.ScoreGetter;
+import WekaAndStem.ScoreGetter;
 
 import java.util.HashSet;
 import java.util.LinkedList;

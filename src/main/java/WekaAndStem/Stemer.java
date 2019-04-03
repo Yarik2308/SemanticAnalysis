@@ -1,4 +1,4 @@
-package SemanticAnalysis;
+package WekaAndStem;
 
 import ru.stachek66.nlp.mystem.holding.Factory;
 import ru.stachek66.nlp.mystem.holding.MyStem;

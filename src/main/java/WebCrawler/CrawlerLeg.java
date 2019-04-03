@@ -278,8 +278,4 @@ public class CrawlerLeg {
         return comments;
     }
 
-    public List<String> getLinks() {
-        return this.links;
-    }
-
 }

@@ -1,4 +1,4 @@
-package SemanticAnalysis;
+package WekaAndStem;
 
 
 import FilesHandlers.Analysis;

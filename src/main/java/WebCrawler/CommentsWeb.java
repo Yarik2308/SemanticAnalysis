@@ -1,7 +1,5 @@
 package WebCrawler;
 
-import SemanticAnalysis.Comment;
-
 public class CommentsWeb {
     private Integer id, filmId, score, scoreMLT;
     private String text, author;

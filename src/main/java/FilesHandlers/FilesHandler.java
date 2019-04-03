@@ -1,8 +1,7 @@
 package FilesHandlers;
 
-import SemanticAnalysis.Comment;
-import SemanticAnalysis.CommentStem;
-import SemanticAnalysis.XMLParser;
+import WekaAndStem.Comment;
+import WekaAndStem.CommentStem;
 import org.xml.sax.SAXException;
 import ru.stachek66.nlp.mystem.holding.MyStemApplicationException;
 import javax.xml.parsers.ParserConfigurationException;

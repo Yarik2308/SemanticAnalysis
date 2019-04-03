@@ -1,6 +1,6 @@
 package FilesHandlers;
 
-import SemanticAnalysis.Comment;
+import WekaAndStem.Comment;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
