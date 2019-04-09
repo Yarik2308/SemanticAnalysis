@@ -47,7 +47,7 @@ public class Mappers {
         }
     }
 
-    Mappers(){
+    public Mappers(){
         System.out.println("Testing connection to PostgreSQL JDBC");
 
         try {
@@ -89,6 +89,7 @@ public class Mappers {
 
     }
 
+
     public int addComment(CommentsWeb comment){
         try {
             PreparedStatement st = connection.prepareStatement("INSERT INTO comments(film_id, author, " +
@@ -123,8 +124,8 @@ public class Mappers {
         return comment.getId();
     }
 
-    public List<CommentsWeb> getComments(int filmId){
-        List<CommentsWeb> comments = new ArrayList<>();
+    public ArrayList<CommentsWeb> getComments(int filmId){
+        ArrayList<CommentsWeb> comments = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(
                     "SELECT * FROM comments WHERE film_id = ?");
@@ -150,6 +151,24 @@ public class Mappers {
             e.printStackTrace();
         }
         return comments;
+    }
+
+    public boolean updateCommentMLT(int commentID, int score){
+        boolean result = false;
+        try{
+            PreparedStatement st = connection.prepareStatement("UPDATE comments SET score_mlt = ? " +
+                    "WHERE comment_id = ?");
+            st.setInt(1, score);
+            st.setInt(2, commentID);
+
+            int affectedRows = st.executeUpdate();
+            if(affectedRows > 0)
+                result = true;
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return result;
     }
 
 
@@ -249,8 +268,7 @@ public class Mappers {
         return film.getId();
     }
 
-
-    public FilmsWeb getFilm(int filmId){
+    public FilmsWeb getFilmWithoutComments(int filmId){
         FilmsWeb film = new FilmsWeb();
         try {
             PreparedStatement st = connection.prepareStatement(
@@ -278,7 +296,67 @@ public class Mappers {
         }
 
         film.setGenres(getGenres(filmId));
+        return film;
+    }
+
+    public FilmsWeb getFilm(int filmId){
+        FilmsWeb film = getFilmWithoutComments(filmId);
+
         film.setComments(getComments(filmId));
         return film;
     }
+
+    public List<FilmsWeb> getAllFilmsWithooutComments(){
+        ArrayList<FilmsWeb> films = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(
+                    "SELECT * FROM films");
+            ResultSet rs = st.executeQuery();
+
+            // loop through the result set
+            while(rs.next()){
+                FilmsWeb film = new FilmsWeb(rs.getString("name"),
+                        rs.getString("description"), rs.getInt("viewers_score"),
+                        rs.getInt("critics_score"));
+
+                film.setImgLink(rs.getString("img_link"));
+                film.setId(rs.getInt("film_id"));
+                film.setGenres(getGenres(film.getId()));
+                films.add(film);
+            }
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+
+        return films;
+    }
+
+    public ArrayList<CommentsWeb> getAllComments(){
+        ArrayList<CommentsWeb> comments = new ArrayList<>();
+        try {
+            PreparedStatement st = connection.prepareStatement(
+                    "SELECT * FROM comments");
+
+            ResultSet rs = st.executeQuery();
+
+            // loop through the result set
+            while (rs.next()) {
+                CommentsWeb comment = new CommentsWeb( rs.getString("author"),
+                        rs.getString("text"),
+                        rs.getInt("score"));
+                comment.setFilmId(rs.getInt("film_id"));
+                comment.setId(rs.getInt("comment_id"));
+                comment.setScoreMLT(rs.getInt("score_mlt"));
+                comments.add(comment);
+            }
+
+            st.close();
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return comments;
+    }
+
 }

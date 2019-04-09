@@ -1,5 +1,6 @@
 package FilesHandlers;
 
+import WebCrawler.CommentsWeb;
 import WekaAndStem.Comment;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -56,7 +57,7 @@ public class CommentsToCSV {
 
     public static void Convert3(ArrayList<Comment> comments) throws IOException{
         try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/MyCommentsTo3_T.csv"));
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/MyCommentsTo38.csv"));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("score", "text"));
@@ -65,10 +66,31 @@ public class CommentsToCSV {
                 if(comment.getScore() < 4)
                     csvPrinter.printRecord("bad", comment.getText());
                 else
-                    if(comment.getScore() < 7)
+                    if(comment.getScore() < 8)
                         csvPrinter.printRecord("normal", comment.getText());
                     else
                         csvPrinter.printRecord("good", comment.getText());
+            }
+
+            csvPrinter.flush();
+        }
+    }
+
+    public static void Convert3Web(ArrayList<CommentsWeb> comments) throws IOException{
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3.csv"));
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("score", "text"));
+        ) {
+            for(CommentsWeb comment: comments) {
+                if(comment.getScore() < 4)
+                    csvPrinter.printRecord("bad", comment.getText());
+                else
+                if(comment.getScore() < 7)
+                    csvPrinter.printRecord("normal", comment.getText());
+                else
+                    csvPrinter.printRecord("good", comment.getText());
             }
 
             csvPrinter.flush();

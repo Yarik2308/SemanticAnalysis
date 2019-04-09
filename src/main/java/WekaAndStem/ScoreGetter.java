@@ -3,30 +3,45 @@ package WekaAndStem;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
+import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.MultiFilter;
+import weka.filters.unsupervised.attribute.StringToWordVector;
+import weka.filters.Filter;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class ScoreGetter {
 
     private ArrayList <Attribute> wekaAttributes;
-    private String FILE = "//Applications/weka-3-8-3-oracle-jvm.app/Contents/Java/FilteredClassifier.model";
+    //private String FILE = "//Applications/weka-3-8-3-oracle-jvm.app/Contents/Java/FilteredClassifier.model";
+    private String modelFile = "src/main/resources/MyModel.model";
+    private String filterFile = "src/main/resources/MultiFilter.model";
     private Classifier cls;
+    private MultiFilter multiFilter;
     private CommentStem Stemer;
 
     public ScoreGetter() throws Exception{
         // load classifier
-        if (new File(FILE).exists()) {
-            cls = (Classifier) weka.core.SerializationHelper.read(FILE);
+        if (new File(modelFile).exists()) {
+            cls = (Classifier) weka.core.SerializationHelper.read(modelFile);
             System.out.print("Ready for prediction\n");
         } else {
             System.out.print("Model do not exist\n");
             return;
         }
+        // load filter
+        if (new File(filterFile).exists()) {
+            multiFilter = (MultiFilter) weka.core.SerializationHelper.read(filterFile);
+            System.out.print("Ready for prediction\n");
+        } else {
+            System.out.print("Filter do not exist\n");
+            return;
+        }
+
         // prepare Stem
         Stemer = new CommentStem();
 
@@ -59,7 +74,7 @@ public class ScoreGetter {
         }
 
         // create new Instance for prediction.
-        DenseInstance newInstance = new DenseInstance(2);
+        Instance newInstance = new DenseInstance(2);
 
         // weka demand a dataset to be set to new Instance
         Instances newDataset = new Instances("predictiondata", wekaAttributes, 1);
@@ -69,11 +84,19 @@ public class ScoreGetter {
 
         // text attribute value set to value to be predicted
         newInstance.setValue(wekaAttributes.get(1), stemText);
+        newDataset.add(newInstance);
 
 
-        double pred = cls.classifyInstance(newInstance);
+        Instances filteredData =  Filter.useFilter(newDataset, multiFilter);
+        for(Instance instance: filteredData){
+            double pred = cls.classifyInstance(instance);
+            return newDataset.classAttribute().value((int) pred);
+        }
+
+        //double pred = cls.classifyInstance(newInstance);
         // return original label
-        return newDataset.classAttribute().value((int) pred);
+        //return newDataset.classAttribute().value((int) pred);
+        return "false";
     }
 
 }
