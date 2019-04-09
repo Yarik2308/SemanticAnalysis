@@ -4,6 +4,7 @@ MyComments.xml
 *.csv
 FilmsImgs/
 !.mvn/wrapper/maven-wrapper.jar
+nodes/
 
 ### STS ###
 .apt_generated
