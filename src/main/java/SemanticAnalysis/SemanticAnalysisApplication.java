@@ -1,52 +1,15 @@
 package SemanticAnalysis;
 
-import SemanticAnalysis.config.EsConfig;
 import SemanticAnalysis.connector.ElasticSearchConnector;
-import SemanticAnalysis.model.Film;
-import SemanticAnalysis.repository.FilmRepository;
-import WebCrawler.FilmsWeb;
-import WebCrawler.Mappers;
-
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.unit.TimeValue;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.elasticsearch.index.mapper.AllFieldMapper.Defaults.INDEX_NAME;
-import static org.elasticsearch.index.mapper.RangeFieldMapper.RangeType.IP;
-import static org.elasticsearch.transport.TcpTransport.PORT;
 
 @SpringBootApplication
 @RestController
 public class SemanticAnalysisApplication {
-
-    @Autowired
-    private static FilmRepository repository;
-
-    @PostMapping("/saveFilm")
-    public int saveFilm(@RequestBody List<Film> films){
-        repository.saveAll(films);
-        return films.size();
-    }
-
-    @GetMapping("/findAll")
-    public Iterable<Film> findAllFilms() {
-        return repository.findAll();
-    }
-
-    @GetMapping("/findByName/{name}")
-    public List<Film> findByName(@PathVariable String name) {
-        return repository.findByName(name);
-    }
-
 
     public static void main(String[] args) {
 
