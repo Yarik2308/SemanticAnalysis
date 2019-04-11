@@ -1,9 +1,9 @@
 HELP.md
 /target/
+!.mvn/wrapper/maven-wrapper.jar
 MyComments.xml
 *.csv
 FilmsImgs/
-!.mvn/wrapper/maven-wrapper.jar
 nodes/
 
 ### STS ###
