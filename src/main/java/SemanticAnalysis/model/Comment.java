@@ -1,9 +1,6 @@
 package SemanticAnalysis.model;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import javax.persistence.Id;
 
 import javax.persistence.Column;

@@ -24,7 +24,6 @@ import java.util.List;
 public class ElasticSearchConnector {
 
     private String clusterName = "SemanticAnalysis";
-    //private String indexName = "semantic_analysis_index";
     private TransportClient client = null;
 
     public ElasticSearchConnector( String clusterName, String clusterIp, int clusterPort )
@@ -116,7 +115,6 @@ public class ElasticSearchConnector {
         List<FilmsWeb> filmsWeb = mappers.getAllFilmsWithooutComments();
 
         for (FilmsWeb filmWeb : filmsWeb) {
-            // either use client#prepare, or use Requests# to directly build index/delete requests
             try {
                 bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE).add(
                         client.prepareIndex(indexName, indexType, null)

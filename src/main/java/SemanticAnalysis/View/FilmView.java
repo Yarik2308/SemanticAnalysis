@@ -75,7 +75,6 @@ public class FilmView extends VerticalLayout implements HasUrlParameter<Integer>
         Image image = new Image("src/main/resources/FilmsImgs/" + url, "Img");
         image.setMaxHeight("1000px");
         image.setMaxWidth("700px");
-        //image.setSizeFull();
 
         return image;
     }
