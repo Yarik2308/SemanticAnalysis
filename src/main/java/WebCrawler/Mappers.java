@@ -244,7 +244,7 @@ public class Mappers {
             try (ResultSet generatedKeys = st.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     film.setId(generatedKeys.getInt(1));
-                    System.out.println("Film ID: " + film.getId());
+                    System.out.println("FilmIndex ID: " + film.getId());
                 }
                 else {
                     throw new SQLException("Creating film failed, no ID obtained.");

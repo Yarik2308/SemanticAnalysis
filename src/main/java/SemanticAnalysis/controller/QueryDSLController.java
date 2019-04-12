@@ -1,6 +1,6 @@
 package SemanticAnalysis.controller;
 
-import SemanticAnalysis.model.Film;
+import SemanticAnalysis.model.FilmIndex;
 import SemanticAnalysis.service.QueryDSLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class QueryDSLController {
     private QueryDSLService service;
 
     @GetMapping("/search/{text}")
-    public List<Film> search(@PathVariable String text){
+    public List<FilmIndex> search(@PathVariable String text){
         return service.search(text);
     }
 }
