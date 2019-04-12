@@ -91,7 +91,7 @@ public class MainView extends VerticalLayout {
         } else {
             des.add(new Label(film.getDescription()));
         }
-        
+
         filmLay.add(des);
         return filmLay;
     }
