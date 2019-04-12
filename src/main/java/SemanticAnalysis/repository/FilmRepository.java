@@ -1,6 +1,5 @@
 package SemanticAnalysis.repository;
 
-
 import SemanticAnalysis.model.Film;
 import org.springframework.data.jpa.repository.JpaRepository;
 
