@@ -65,7 +65,10 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-icons-flow</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -76,13 +79,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-<<<<<<< HEAD
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-icons-flow</artifactId>
-        </dependency>
-=======
->>>>>>> 4dcfe166a33f2c6ea40f77194b21de277fa24be2
         <!--stem-->
         <dependency>
             <groupId>ru.stachek66.nlp</groupId>
@@ -119,7 +115,6 @@
             <artifactId>postgresql</artifactId>
             <version>9.4-1206-jdbc42</version>
         </dependency>
-<<<<<<< HEAD
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -134,8 +129,6 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.3.0</version>
         </dependency>
-=======
->>>>>>> 4dcfe166a33f2c6ea40f77194b21de277fa24be2
     </dependencies>
 
     <dependencyManagement>

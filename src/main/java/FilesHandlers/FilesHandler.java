@@ -18,39 +18,71 @@ public class FilesHandler {
             ParserConfigurationException, SAXException {
 
         // Create CSV file for Weka GUI.
-        String message;
         CommentStem Stemer = new CommentStem();
-        Mappers mappers = new Mappers();
-        //ArrayList<Comment> comments = XMLParser.parse();
-        ArrayList<CommentsWeb> comments = mappers.getAllComments();
-        ArrayList<CommentsWeb> commentsWithout0 = new ArrayList<>();
-        ArrayList<CommentsWeb> commentsWithoutShortText = new ArrayList<>();
+        String message;
+
+        ////// ROMIP comments
+        ArrayList<Comment> comments = XMLParser.parse();
+        ArrayList<Comment> commentsWithout0 = new ArrayList<>();
+        ArrayList<Comment> commentsWithoutShortComments = new ArrayList<>();
 
         // Delete comments with unknown score
-        for (CommentsWeb comment : comments) {
+        for (Comment comment : comments) {
             if (comment.getScore() != 0 )
                 commentsWithout0.add(comment);
         }
 
-        for (CommentsWeb comment : commentsWithout0) {
+        for (Comment comment : commentsWithout0) {
             ArrayList<String> commentStemString = Stemer.Stem(comment.getText());
             message = "";
             for (String word : commentStemString) {
-                if(word.length()>2) {
-                    if (message.isEmpty())
-                        message = word;
-                    else
-                        message = message + " " + word;
-                }
+                if (message.isEmpty())
+                    message = word;
+                else
+                    message = message + " " + word;
             }
             comment.setText(message);
         }
 
-        for (CommentsWeb comment: commentsWithout0){
-            if(comment.getText().length() >= 4){
-                commentsWithoutShortText.add(comment);
+        for (Comment comment : commentsWithout0) {
+            if(comment.getText().length()>5){
+                commentsWithoutShortComments.add(comment);
             }
         }
-        CommentsToCSV.Convert3Web(commentsWithoutShortText);
+
+        CommentsToCSV.Convert3(commentsWithoutShortComments);
+
+        ////// Megacritic Comments
+        Mappers mappers = new Mappers();
+        ArrayList<CommentsWeb> commentsWeb = mappers.getAllComments();
+        ArrayList<CommentsWeb> commentsWithout0Web = new ArrayList<>();
+        ArrayList<CommentsWeb> commentsWithoutShortCommentsWeb = new ArrayList<>();
+
+        // Delete comments with unknown score
+        for (CommentsWeb comment : commentsWeb) {
+            if (comment.getScore() != 0 )
+                commentsWithout0Web.add(comment);
+        }
+
+        for (CommentsWeb comment : commentsWithout0Web) {
+            ArrayList<String> commentStemString = Stemer.Stem(comment.getText());
+            message = "";
+            for (String word : commentStemString) {
+                if (message.isEmpty())
+                    message = word;
+                else
+                    message = message + " " + word;
+                }
+            comment.setText(message);
+        }
+
+        for (CommentsWeb comment : commentsWithout0Web) {
+            if(comment.getText().length()>5){
+                commentsWithoutShortCommentsWeb.add(comment);
+            }
+        }
+
+        CommentsToCSV.Convert3Web(commentsWithoutShortCommentsWeb);
+
     }
 }

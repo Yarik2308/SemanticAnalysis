@@ -3,6 +3,7 @@ HELP.md
 !.mvn/wrapper/maven-wrapper.jar
 MyComments.xml
 *.csv
+*.arff
 FilmsImgs/
 nodes/
 

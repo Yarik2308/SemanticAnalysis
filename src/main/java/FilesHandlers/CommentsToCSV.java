@@ -57,34 +57,44 @@ public class CommentsToCSV {
 
     public static void Convert3(ArrayList<Comment> comments) throws IOException{
         try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/MyCommentsTo38.csv"));
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/MyComments3Short4567.csv"));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("score", "text"));
         ) {
+            ////6789
+//            for(Comment comment: comments) {
+//                if(comment.getScore() < 7)
+//                    csvPrinter.printRecord("bad", comment.getText());
+//                else
+//                    if(comment.getScore() < 9)
+//                        csvPrinter.printRecord("normal", comment.getText());
+//                    else
+//                        csvPrinter.printRecord("good", comment.getText());
+//            }
+            ////3478
+////            for(Comment comment: comments) {
+////                if(comment.getScore() < 4)
+////                    csvPrinter.printRecord("bad", comment.getText());
+////                else
+////                if(comment.getScore() < 8)
+////                    csvPrinter.printRecord("normal", comment.getText());
+////                else
+////                    csvPrinter.printRecord("good", comment.getText());
+////            }
+            ////3467
+//            for(Comment comment: comments) {
+//                if(comment.getScore() < 4)
+//                    csvPrinter.printRecord("bad", comment.getText());
+//                else
+//                if(comment.getScore() < 7)
+//                    csvPrinter.printRecord("normal", comment.getText());
+//                else
+//                    csvPrinter.printRecord("good", comment.getText());
+//            }
+            ////4567
             for(Comment comment: comments) {
-                if(comment.getScore() < 4)
-                    csvPrinter.printRecord("bad", comment.getText());
-                else
-                    if(comment.getScore() < 8)
-                        csvPrinter.printRecord("normal", comment.getText());
-                    else
-                        csvPrinter.printRecord("good", comment.getText());
-            }
-
-            csvPrinter.flush();
-        }
-    }
-
-    public static void Convert3Web(ArrayList<CommentsWeb> comments) throws IOException{
-        try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3.csv"));
-
-                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("score", "text"));
-        ) {
-            for(CommentsWeb comment: comments) {
-                if(comment.getScore() < 4)
+                if(comment.getScore() < 5)
                     csvPrinter.printRecord("bad", comment.getText());
                 else
                 if(comment.getScore() < 7)
@@ -93,6 +103,59 @@ public class CommentsToCSV {
                     csvPrinter.printRecord("good", comment.getText());
             }
 
+            csvPrinter.flush();
+        }
+    }
+
+
+    public static void Convert3Web(ArrayList<CommentsWeb> comments) throws IOException{
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3Short4567.csv"));
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("score", "text"));
+        ) {
+            ////6789
+//            for(CommentsWeb comment: comments) {
+//                if(comment.getScore() < 7)
+//                    csvPrinter.printRecord("bad", comment.getText());
+//                else
+//                if(comment.getScore() < 9)
+//                    csvPrinter.printRecord("normal", comment.getText());
+//                else
+//                    csvPrinter.printRecord("good", comment.getText());
+//            }
+            ////3478
+//            for(CommentsWeb comment: comments) {
+//                if(comment.getScore() < 4)
+//                    csvPrinter.printRecord("bad", comment.getText());
+//                else
+//                if(comment.getScore() < 8)
+//                    csvPrinter.printRecord("normal", comment.getText());
+//                else
+//                    csvPrinter.printRecord("good", comment.getText());
+//            }
+            ////3467
+//            for(CommentsWeb comment: comments) {
+//                if(comment.getScore() < 4)
+//                    csvPrinter.printRecord("bad", comment.getText());
+//                else
+//                if(comment.getScore() < 7)
+//                    csvPrinter.printRecord("normal", comment.getText());
+//                else
+//                    csvPrinter.printRecord("good", comment.getText());
+//            }
+
+            ////4567
+            for(CommentsWeb comment: comments) {
+                if(comment.getScore() < 5)
+                    csvPrinter.printRecord("bad", comment.getText());
+                else
+                if(comment.getScore() < 7)
+                    csvPrinter.printRecord("normal", comment.getText());
+                else
+                    csvPrinter.printRecord("good", comment.getText());
+            }
             csvPrinter.flush();
         }
     }
