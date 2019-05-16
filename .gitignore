@@ -5,6 +5,7 @@ MyComments.xml
 *.csv
 *.arff
 *.txt
+*.model
 FilmsImgs/
 nodes/
 
