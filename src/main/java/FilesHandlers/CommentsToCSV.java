@@ -108,45 +108,78 @@ public class CommentsToCSV {
     }
 
 
-    public static void Convert3Web(ArrayList<CommentsWeb> comments) throws IOException{
+    public static void Convert3Web6789(ArrayList<CommentsWeb> comments) throws IOException{
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3Short6789.csv"));
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("score", "text"));
+        ) {
+            ////6789
+            for(CommentsWeb comment: comments) {
+                if(comment.getScore() < 7)
+                    csvPrinter.printRecord("bad", comment.getText());
+                else
+                if(comment.getScore() < 9)
+                    csvPrinter.printRecord("normal", comment.getText());
+                else
+                    csvPrinter.printRecord("good", comment.getText());
+            }
+
+            csvPrinter.flush();
+        }
+    }
+
+    public static void Convert3Web3478(ArrayList<CommentsWeb> comments) throws IOException {
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3Short3478.csv"));
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("score", "text"));
+        ) {
+            //3478
+            for(CommentsWeb comment: comments) {
+                if(comment.getScore() < 4)
+                    csvPrinter.printRecord("bad", comment.getText());
+                else
+                if(comment.getScore() < 8)
+                    csvPrinter.printRecord("normal", comment.getText());
+                else
+                    csvPrinter.printRecord("good", comment.getText());
+            }
+            csvPrinter.flush();
+        }
+    }
+
+    public static void Convert3Web3467(ArrayList<CommentsWeb> comments) throws IOException {
+        try (
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3Short3467.csv"));
+
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("score", "text"));
+        ) {
+            //3467
+            for(CommentsWeb comment: comments) {
+                if(comment.getScore() < 4)
+                    csvPrinter.printRecord("bad", comment.getText());
+                else
+                if(comment.getScore() < 7)
+                    csvPrinter.printRecord("normal", comment.getText());
+                else
+                    csvPrinter.printRecord("good", comment.getText());
+            }
+            csvPrinter.flush();
+        }
+    }
+
+    public static void Convert3Web4567(ArrayList<CommentsWeb> comments) throws IOException {
         try (
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get("src/main/resources/TestComments3Short4567.csv"));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("score", "text"));
         ) {
-            ////6789
-//            for(CommentsWeb comment: comments) {
-//                if(comment.getScore() < 7)
-//                    csvPrinter.printRecord("bad", comment.getText());
-//                else
-//                if(comment.getScore() < 9)
-//                    csvPrinter.printRecord("normal", comment.getText());
-//                else
-//                    csvPrinter.printRecord("good", comment.getText());
-//            }
-            ////3478
-//            for(CommentsWeb comment: comments) {
-//                if(comment.getScore() < 4)
-//                    csvPrinter.printRecord("bad", comment.getText());
-//                else
-//                if(comment.getScore() < 8)
-//                    csvPrinter.printRecord("normal", comment.getText());
-//                else
-//                    csvPrinter.printRecord("good", comment.getText());
-//            }
-            ////3467
-//            for(CommentsWeb comment: comments) {
-//                if(comment.getScore() < 4)
-//                    csvPrinter.printRecord("bad", comment.getText());
-//                else
-//                if(comment.getScore() < 7)
-//                    csvPrinter.printRecord("normal", comment.getText());
-//                else
-//                    csvPrinter.printRecord("good", comment.getText());
-//            }
-
-            ////4567
+            //4567
             for(CommentsWeb comment: comments) {
                 if(comment.getScore() < 5)
                     csvPrinter.printRecord("bad", comment.getText());
@@ -159,4 +192,5 @@ public class CommentsToCSV {
             csvPrinter.flush();
         }
     }
+
 }

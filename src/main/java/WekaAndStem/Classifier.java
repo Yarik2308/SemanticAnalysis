@@ -22,15 +22,15 @@ import java.util.Random;
 
 public class Classifier {
     //done
-    static final String dataRomip3478 = "src/main/resources/MyComments3Short3478.arff";
-    static final String dataRomip6789 = "src/main/resources/MyComments3Short6789.arff";
-    static final String dataMegacritic3478 = "src/main/resources/TestComments3Short3478.arff";
-    static final String dataMegacritic6789 = "src/main/resources/TestComments3Short6789.arff";
-
     static final String dataRomip3467 = "src/main/resources/MyComments3Short3467.arff";
+    static final String dataRomip3478 = "src/main/resources/MyComments3Short3478.arff";
     static final String dataRomip4567 = "src/main/resources/MyComments3Short6789.arff";
+    static final String dataRomip6789 = "src/main/resources/MyComments3Short6789.arff";
+
     static final String dataMegacritic3467 = "src/main/resources/TestComments3Short3467.arff";
+    static final String dataMegacritic3478 = "src/main/resources/TestComments3Short3478.arff";
     static final String dataMegacritic4567 = "src/main/resources/TestComments3Short4567.arff";
+    static final String dataMegacritic6789 = "src/main/resources/TestComments3Short6789.arff";
 
     static final String stopWordsPath = "src/main/resources/russianST.txt";
 
@@ -56,18 +56,35 @@ public class Classifier {
 //            System.out.println("ROMIP 1<=bad<=3 4<=normal<=6 7<=good<=10");
 //            evaluateFiltered(dataRomip3467);
 //            evaluatePreprocessed(dataRomip3467);
-//
+
+//            System.out.println("ROMIP 1<=bad<=3 4<=normal<=7 8<=good<=10");
+//            evaluateFiltered(dataRomip3478);
+//            evaluatePreprocessed(dataRomip3478);
+
 //            System.out.println("ROMIP 1<=bad<=4 5<=normal<=6 7<=good<=10");
 //            evaluateFiltered(dataRomip4567);
 //            evaluatePreprocessed(dataRomip4567);
-//
-//            System.out.println("Megacritic 1<=bad<=3 4<=normal<=6 7<=good<=10");
-//            evaluateFiltered(dataMegacritic3467);
-//            evaluatePreprocessed(dataMegacritic3467);
+
+//            System.out.println("ROMIP 1<=bad<=6 7<=normal<=8 9<=good<=10");
+//            evaluateFiltered(dataRomip6789);
+//            evaluatePreprocessed(dataRomip6789);
+
+            System.out.println("Megacritic 1<=bad<=3 4<=normal<=6 7<=good<=10");
+            evaluateFiltered(dataMegacritic3467);
+            evaluatePreprocessed(dataMegacritic3467);
+
+            System.out.println("Megacritic 1<=bad<=3 4<=normal<=7 8<=good<=10");
+            evaluateFiltered(dataMegacritic3478);
+            evaluatePreprocessed(dataMegacritic3478);
 
             System.out.println("Megacritic 1<=bad<=4 5<=normal<=6 7<=good<=10");
             evaluateFiltered(dataMegacritic4567);
             evaluatePreprocessed(dataMegacritic4567);
+
+            System.out.println("Megacritic 1<=bad<=6 7<=normal<=8 9<=good<=10");
+            evaluateFiltered(dataMegacritic6789);
+            evaluatePreprocessed(dataMegacritic6789);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,11 +204,10 @@ public class Classifier {
             filteredClassifier.setFilter(multiFilter);
             evalFiltered();
 
-//            System.out.println("Ready for train");
-//            filteredClassifier.buildClassifier(data);
-//
-//            filteredClassifier.setFilter(STWV);
-//            weka.core.SerializationHelper.write("src/main/resources/FilteredClassifier.model", filteredClassifier);
+            //System.out.println("Ready for train");
+            //filteredClassifier.buildClassifier(data);
+
+            //weka.core.SerializationHelper.write("src/main/resources/FilteredClassifier.model", filteredClassifier);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

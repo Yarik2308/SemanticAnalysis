@@ -171,7 +171,7 @@ public class CrawlerLeg {
             Connection.Response resultImageResponse = Jsoup.connect(imgNetUrl).ignoreContentType(true).execute();
 
             // output here
-            FileOutputStream out = (new FileOutputStream(new java.io.File("src/main/resources/FilmsImgs/"
+            FileOutputStream out = (new FileOutputStream(new java.io.File("src/main/webapp/FilmsImgs/"
                     + imgName)));
             // resultImageResponse.body() is where the image's contents are.
             out.write(resultImageResponse.bodyAsBytes());
@@ -245,21 +245,22 @@ public class CrawlerLeg {
                         for(Element elementRev: elementsRev){
                             if(elementRev.attr("style").equals("display:inline;")){
                                 Elements elementsB = elementRev.select("b");
-                                for(Element elementB: elementsB){
-                                    if(!elementB.text().equals("%")){
-                                        authorAndScore = authorAndScore + elementB.text() + " ";
+                                if(elementsB.size()==3) {
+                                    try {
+                                        author = elementsB.get(1).text();
+                                        score = Integer.parseInt(elementsB.get(2).text());
+                                    } catch (NumberFormatException e){
+                                        score =-1;
+                                    }
+                                } else if( elementsB.size()==4){
+                                    try {
+                                        author = elementsB.get(2).text();
+                                        score = Integer.parseInt(elementsB.get(3).text());
+                                    } catch (NumberFormatException e){
+                                        score = -1;
                                     }
                                 }
-                                //System.out.println(authorAndScore);
-                                try{
-                                    int length = authorAndScore.split(" ").length;
-                                    for(int i = 1; i<length - 1; i++){
-                                        author = author + authorAndScore.split(" ")[i] + " ";
-                                    }
-                                    score = Integer.parseInt(authorAndScore.split(" ")[length-1]);
-                                } catch (NumberFormatException e){
-                                    score = - 1;
-                                }
+
                             }
                             if(score!=-1){
                                 if(elementRev.attr("class").equals("jrReviewContent")){

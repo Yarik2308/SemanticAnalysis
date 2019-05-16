@@ -18,7 +18,7 @@ public class ScoreGetter {
 
     private ArrayList <Attribute> wekaAttributes;
     //private String FILE = "//Applications/weka-3-8-3-oracle-jvm.app/Contents/Java/FilteredClassifier.model";
-    private String modelFile = "src/main/resources/MyModel.model";
+    private String modelFile = "src/main/resources/FilteredClassifier.model";
     private String filterFile = "src/main/resources/MultiFilter.model";
     private Classifier cls;
     private MultiFilter multiFilter;
@@ -34,22 +34,22 @@ public class ScoreGetter {
             return;
         }
         // load filter
-        if (new File(filterFile).exists()) {
-            multiFilter = (MultiFilter) weka.core.SerializationHelper.read(filterFile);
-            System.out.print("Ready for prediction\n");
-        } else {
-            System.out.print("Filter do not exist\n");
-            return;
-        }
+//        if (new File(filterFile).exists()) {
+//            multiFilter = (MultiFilter) weka.core.SerializationHelper.read(filterFile);
+//            System.out.print("Ready for prediction\n");
+//        } else {
+//            System.out.print("Filter do not exist\n");
+//            return;
+//        }
 
         // prepare Stem
         Stemer = new CommentStem();
 
         // Declare the label attribute along with its values
         ArrayList <String> classAttributeValues = new ArrayList<>();
-        classAttributeValues.add("good");
-        classAttributeValues.add("normal");
         classAttributeValues.add("bad");
+        classAttributeValues.add("normal");
+        classAttributeValues.add("good");
         Attribute classAttribute = new Attribute("score", classAttributeValues);
 
         // Declare text attribute to hold the message
@@ -62,7 +62,6 @@ public class ScoreGetter {
     }
 
     public String predict(String text) throws Exception{
-
         // Steming input text
         ArrayList<String> commentStemString = Stemer.Stem(text);
         String stemText = "";
@@ -87,8 +86,8 @@ public class ScoreGetter {
         newDataset.add(newInstance);
 
 
-        Instances filteredData =  Filter.useFilter(newDataset, multiFilter);
-        for(Instance instance: filteredData){
+        //Instances filteredData =  Filter.useFilter(newDataset, multiFilter);
+        for(Instance instance: newDataset){
             double pred = cls.classifyInstance(instance);
             return newDataset.classAttribute().value((int) pred);
         }

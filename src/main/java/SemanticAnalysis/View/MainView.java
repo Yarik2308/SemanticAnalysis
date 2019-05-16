@@ -1,7 +1,13 @@
 package SemanticAnalysis.View;
 
+import SemanticAnalysis.model.Comment;
 import SemanticAnalysis.model.FilmIndex;
 import SemanticAnalysis.service.QueryDSLService;
+import com.vaadin.flow.component.charts.Chart;
+import com.vaadin.flow.component.charts.model.ChartType;
+import com.vaadin.flow.component.charts.model.Configuration;
+import com.vaadin.flow.component.charts.model.DataSeries;
+import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,6 +16,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 
 @Route
@@ -54,12 +62,13 @@ public class MainView extends VerticalLayout {
         VerticalLayout nameAndGenres = new VerticalLayout();
 
         RouterLink name = new RouterLink(film.getName(), FilmView.class, film.getId());
+        RouterLink link = new RouterLink("смотреть отзыввы", FilmView.class, film.getId());
 
         Label genres = new Label();
 
         for(int i = 0; i<film.getGenres().size(); i++){
             genres.add(film.getGenres().get(i));
-            if(i!=film.getGenres().size()){
+            if(i!=film.getGenres().size()-1){
                 genres.add(", ");
             } else{
                 genres.add(".");
@@ -77,7 +86,10 @@ public class MainView extends VerticalLayout {
             des.add(new Label(film.getDescription()));
         }
 
+        des.add(link);
         filmLay.add(des);
+
         return filmLay;
     }
+
 }
