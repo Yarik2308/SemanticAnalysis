@@ -4,6 +4,7 @@ HELP.md
 MyComments.xml
 *.csv
 *.arff
+*.txt
 FilmsImgs/
 nodes/
 
