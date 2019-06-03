@@ -1,13 +1,12 @@
 package SemanticAnalysis.View;
 
 import SemanticAnalysis.model.Comment;
+import SemanticAnalysis.model.Film;
 import SemanticAnalysis.model.FilmIndex;
+import SemanticAnalysis.repository.FilmRepository;
 import SemanticAnalysis.service.QueryDSLService;
 import com.vaadin.flow.component.charts.Chart;
-import com.vaadin.flow.component.charts.model.ChartType;
-import com.vaadin.flow.component.charts.model.Configuration;
-import com.vaadin.flow.component.charts.model.DataSeries;
-import com.vaadin.flow.component.charts.model.DataSeriesItem;
+import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,6 +16,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import java.util.List;
 
 
@@ -25,14 +25,18 @@ public class MainView extends VerticalLayout {
 
     private final QueryDSLService service;
 
+    private final FilmRepository filmRepository;
+
     private VerticalLayout content;
 
     private final TextField filter = new TextField("", "search");
 
 
     @Autowired
-    public MainView(QueryDSLService service) {
+    public MainView(QueryDSLService service, FilmRepository repository)  {
         this.service = service;
+        this.filmRepository = repository;
+
         content = new VerticalLayout();
 
 
@@ -62,7 +66,7 @@ public class MainView extends VerticalLayout {
         VerticalLayout nameAndGenres = new VerticalLayout();
 
         RouterLink name = new RouterLink(film.getName(), FilmView.class, film.getId());
-        RouterLink link = new RouterLink("смотреть отзыввы", FilmView.class, film.getId());
+        RouterLink link = new RouterLink("смотреть отзывы", FilmView.class, film.getId());
 
         Label genres = new Label();
 
@@ -87,9 +91,58 @@ public class MainView extends VerticalLayout {
         }
 
         des.add(link);
+        des.setWidth("50%");
         filmLay.add(des);
+
+        filmLay.add(addChart(film.getId()));
 
         return filmLay;
     }
 
+    private Chart addChart(Integer filmId){
+        Chart chart = new Chart(ChartType.BAR);
+
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle("Пропорции мнений");
+        YAxis yAxis = new YAxis();
+        yAxis.setTitle("");
+        conf.addyAxis(yAxis);
+
+        int positive = 0;
+        int neutral = 0;
+        int bad = 0;
+
+        Film film = filmRepository.findById(filmId).get();
+        List<Comment> comments = film.getComments();
+
+        for(Comment comment: comments){
+            if(comment.getScoreMLT()==3){
+                positive++;
+            } else if(comment.getScoreMLT()==2){
+                neutral++;
+            } else {
+                bad++;
+            }
+        }
+
+        XAxis xAxis = new XAxis();
+        xAxis.setCategories("Позитивные", "Нейтральные", "Негативные");
+        //xAxis.setTitle("Отзывы");
+        conf.addxAxis(xAxis);
+
+        DataSeries series = new DataSeries();
+        series.add(new DataSeriesItem("Позитивные", positive));
+        series.add(new DataSeriesItem("Нормальные", neutral));
+        series.add(new DataSeriesItem("Плохие", bad));
+        series.setName("Пропорции");
+        conf.addSeries(series);
+
+        Legend legend = new Legend();
+        legend.setEnabled(false);
+        conf.setLegend(legend);
+
+        chart.setWidth("25%");
+
+        return chart;
+    }
 }

@@ -9,7 +9,7 @@ public class WekaAndStem {
     public static void main(String args[]) throws Exception{
 
 //        ScoreGetter getter = new ScoreGetter();
-//        String result = getter.predict("Потрясающей красоты фильм! Роскошные костюмы, красивые актеры (Ашвария Рай!), обалденные интерьеры... Глаз не оторвать.");
+//        String result = getter.predict("Посмотрели фильм в кинотеатре! Очень понравилась экранизация! Фильм прошёл легко, не затянуто, актеры сыграли на отлично! Развязка также не подвела! А в сравнении с оригиналом- достойно!");
 //        System.out.print(result + "\n");
 //        result = getter.predict("Не понравился. По-моему, первый Блейд гораздо лучше");
 //        System.out.print(result + "\n");

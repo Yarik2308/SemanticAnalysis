@@ -19,9 +19,7 @@ public class ScoreGetter {
     private ArrayList <Attribute> wekaAttributes;
     //private String FILE = "//Applications/weka-3-8-3-oracle-jvm.app/Contents/Java/FilteredClassifier.model";
     private String modelFile = "src/main/resources/FilteredClassifier.model";
-    private String filterFile = "src/main/resources/MultiFilter.model";
     private Classifier cls;
-    private MultiFilter multiFilter;
     private CommentStem Stemer;
 
     public ScoreGetter() throws Exception{
@@ -33,14 +31,6 @@ public class ScoreGetter {
             System.out.print("Model do not exist\n");
             return;
         }
-        // load filter
-//        if (new File(filterFile).exists()) {
-//            multiFilter = (MultiFilter) weka.core.SerializationHelper.read(filterFile);
-//            System.out.print("Ready for prediction\n");
-//        } else {
-//            System.out.print("Filter do not exist\n");
-//            return;
-//        }
 
         // prepare Stem
         Stemer = new CommentStem();
@@ -72,6 +62,7 @@ public class ScoreGetter {
                 stemText = stemText + " " + word;
         }
 
+        //System.out.println(stemText);
         // create new Instance for prediction.
         Instance newInstance = new DenseInstance(2);
 

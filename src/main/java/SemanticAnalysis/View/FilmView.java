@@ -98,7 +98,10 @@ public class FilmView extends VerticalLayout implements HasUrlParameter<Integer>
 
         Image image = new Image("/FilmsImgs/" + url, "Img");
 
-        image.setSizeFull();
+        //image.setSizeFull();
+        image.setMaxWidth("100%");
+        image.setMaxHeight("100%");
+
 
         return image;
     }
@@ -163,11 +166,11 @@ public class FilmView extends VerticalLayout implements HasUrlParameter<Integer>
         positiveSeries.setId("pos");
         series.add(positiveSeries);
 
-        DataSeriesItem neutralSeries = new DataSeriesItem("Нормальные: " + neutral, positive);
+        DataSeriesItem neutralSeries = new DataSeriesItem("Нейтральные: " + neutral, neutral);
         neutralSeries.setId("neu");
         series.add(neutralSeries);
 
-        DataSeriesItem badSeries = new DataSeriesItem("Плохие: " + bad, positive);
+        DataSeriesItem badSeries = new DataSeriesItem("Негативные: " + bad, bad);
         badSeries.setId("bad");
         series.add(badSeries);
 

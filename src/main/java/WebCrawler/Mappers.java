@@ -153,6 +153,34 @@ public class Mappers {
         return comments;
     }
 
+
+    public ArrayList<CommentsWeb> getComments(){
+        ArrayList<CommentsWeb> comments = new ArrayList<>();
+        try {
+            PreparedStatement st = connection.prepareStatement(
+                    "SELECT * FROM comments");
+
+            // set the value
+            ResultSet rs = st.executeQuery();
+
+            // loop through the result set
+            while (rs.next()) {
+                CommentsWeb comment = new CommentsWeb( rs.getString("author"),
+                        rs.getString("text"),
+                        rs.getInt("score"));
+                comment.setFilmId(rs.getInt("film_id"));
+                comment.setId(rs.getInt("comment_id"));
+                comment.setScoreMLT(rs.getInt("score_mlt"));
+                comments.add(comment);
+            }
+            st.close();
+        } catch (SQLException e){
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+        }
+        return comments;
+    }
+
     public boolean updateCommentMLT(int commentID, int score){
         boolean result = false;
         try{

@@ -5,6 +5,8 @@ import FilesHandlers.XMLParser;
 import SemanticAnalysis.connector.ElasticSearchConnector;
 import WebCrawler.CommentsWeb;
 import WebCrawler.Mappers;
+import WebCrawler.WebCrawler;
+import WekaAndStem.Classifier;
 import WekaAndStem.Comment;
 import WekaAndStem.CommentStem;
 import WekaAndStem.ScoreGetter;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 
 @SpringBootApplication
 @RestController
@@ -26,6 +30,21 @@ public class SemanticAnalysisApplication {
         ElasticSearchConnector es = null;
 
         try {
+            ////// Getting data from Megacritic
+            Mappers mappers = new Mappers();
+            List<CommentsWeb> comments = mappers.getComments();
+            if(comments.size()<10) {
+                System.out.println("Getting data from Megacritic");
+                WebCrawler.main();
+            }
+
+            ////// Creating Classifier and data analysis
+            if(comments.get(1).getScoreMLT() == null){
+                System.out.println("Creating Classifier and data analysis");
+                Classifier.main();
+            }
+
+            ////// ElasticSearch Check
             es = new ElasticSearchConnector("SemanticAnalysis", "localhost", 9300);
 
             // check if elastic search cluster is healthy
